@@ -280,6 +280,24 @@ function getDock() {
   return dock;
 }
 
+/* Récupère (et clone) l'icône propre à la modale — projet, compétence ou certification */
+function getDockIcon(win) {
+  const wrap = win.querySelector('.modal-proj-icon, .modal-skill-icon, .modal-cert-icon');
+  if (wrap) {
+    const clone = wrap.cloneNode(true);
+    clone.removeAttribute('style');
+    return clone;
+  }
+  // Repli (ex : carte "Projet à venir" sans icône dédiée) — réutilise la 1ère icône trouvée, sinon une icône générique
+  const anyIcon = win.querySelector('.modal-body i[class*="fa-"]');
+  const span = document.createElement('span');
+  span.className = 'dock-icon-fallback';
+  const i = document.createElement('i');
+  i.className = anyIcon ? anyIcon.className : 'fa-solid fa-window-restore';
+  span.appendChild(i);
+  return span;
+}
+
 function addToDock(win) {
   const d = getDock();
   if (d.querySelector(`[data-dock-id="${win.id}"]`)) return;
@@ -288,7 +306,11 @@ function addToDock(win) {
   const chip  = document.createElement('button');
   chip.className      = 'dock-chip';
   chip.dataset.dockId = win.id;
-  chip.innerHTML = `<span class="dock-dot"></span>${title.length > 26 ? title.slice(0, 24) + '…' : title}`;
+  chip.appendChild(getDockIcon(win));
+  const label = document.createElement('span');
+  label.className = 'dock-label';
+  label.textContent = title.length > 26 ? title.slice(0, 24) + '…' : title;
+  chip.appendChild(label);
   chip.addEventListener('click', () => restoreFromDock(win));
   d.appendChild(chip);
   d.classList.add('visible');

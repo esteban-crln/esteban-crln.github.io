@@ -789,16 +789,25 @@ body.light-mode #modal-dock {
   font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
   color: var(--txt-1);
   background: var(--line); border: 1px solid var(--line-h);
-  border-radius: 999px; padding: 0.3rem 0.85rem;
+  border-radius: 999px; padding: 0.3rem 0.85rem 0.3rem 0.3rem;
   cursor: pointer; white-space: nowrap;
-  transition: background 0.2s, color 0.2s;
-  display: flex; align-items: center; gap: 0.4rem;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
+  display: flex; align-items: center; gap: 0.55rem;
 }
-.dock-chip::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: #FEBC2E; flex-shrink: 0;
+.dock-chip:hover { background: var(--line-h); border-color: var(--line-h); transform: translateY(-2px); }
+.dock-chip:active { transform: translateY(0); }
+
+/* Icône propre à chaque box (projet / compétence / certif), redimensionnée pour le dock */
+.dock-chip .proj-icon,
+.dock-chip .skill-icon,
+.dock-chip .cert-icon,
+.dock-chip .dock-icon-fallback {
+  width: 20px; height: 20px; border-radius: 6px;
+  font-size: 0.66rem; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
 }
-.dock-chip:hover { background: var(--line-h); color: var(--txt-1); }
+.dock-icon-fallback { background: var(--line-h); color: var(--txt-2); }
+.dock-label { line-height: 1; }
 
 /* Title bar */
 .modal-titlebar {
@@ -1265,12 +1274,23 @@ body.light-mode .modal-terminal {
   /* Hide desktop nav, show hamburger */
   .nav-links { display: none !important; }
   #hamburger { display: flex; }
+  /* .nav-links occupait l'espace central qui poussait .nav-actions à droite —
+     une fois caché, on force .nav-actions (donc le hamburger) contre le bord droit */
+  .nav-actions { margin-left: auto; }
   .skills-grid   { grid-template-columns: repeat(2, 1fr); }
   .cert-box-grid { grid-template-columns: repeat(2, 1fr); }
   .proj-grid { grid-template-columns: 1fr; }
   footer { flex-direction: column; gap: 0.4rem; text-align: center; }
   #accueil { padding: 110px 1.5rem 60px; }
   .contact-inner { gap: 2rem; }
+}
+@media (max-width: 600px) {
+  /* Onglets des modales projets (Présentation/Architecture/.../Bilan) :
+     ils ne passaient jamais à la ligne et débordaient hors de la fenêtre
+     sur mobile, rendant le dernier onglet ("Bilan") invisible. */
+  .modal-titlebar { flex-wrap: wrap; row-gap: 0.55rem; }
+  .modal-tabs { flex-basis: 100%; margin-left: 0; width: 100%; justify-content: space-between; }
+  .mtab { flex: 1; text-align: center; padding: 0.3rem 0.3rem; font-size: 0.6rem; }
 }
 @media (max-width: 480px) {
   .hero-name { font-size: clamp(2.5rem, 16vw, 3.5rem); }
