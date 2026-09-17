@@ -155,7 +155,7 @@ function unlockBodyScroll() {
   if (!document.body.classList.contains('modal-open')) return;
   document.body.classList.remove('modal-open');
   document.body.style.top = '';
-  window.scrollTo(0, savedScrollY);
+  window.scrollTo({ top: savedScrollY, behavior: 'instant' });
 }
 
 function refreshOverlay() {
